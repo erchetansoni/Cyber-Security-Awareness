@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101114">
   <meta name="description" content="An interactive phishing-awareness demonstration showing what a website can learn from your browser—without collecting or sending your data.">
-  <title>Phishing Awareness — A Safe Browser Demo</title>
+  <title>🎁 Claim Your Free Reward — Exclusive Offer</title>
   <style>
     :root {
       color-scheme: dark;
@@ -18,26 +18,278 @@
       --amber: #ffc96b;
       --green: #83e3a1;
       --line: #383a42;
+      --blue: #5b8dfa;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
-      background:
-        radial-gradient(ellipse at 50% -18%, rgba(255, 81, 77, .16), transparent 46%),
-        var(--bg);
+      background: var(--bg);
       color: var(--text);
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
     a { color: #ff9a91; }
+    [hidden] { display: none !important; }
+
+    /* ─── PHASE 1: OFFER LANDING ─── */
+    #offer-page {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse at 50% -10%, rgba(255,201,107,.22), transparent 55%),
+        var(--bg);
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    .offer-badge {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: .35rem .9rem;
+      border-radius: 999px;
+      background: rgba(255,201,107,.18);
+      border: 1px solid rgba(255,201,107,.5);
+      color: var(--amber);
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    #offer-page h1 {
+      margin: 0 0 .5rem;
+      font-size: clamp(2.8rem, 11vw, 7rem);
+      font-weight: 950;
+      letter-spacing: -.06em;
+      line-height: .95;
+      color: var(--amber);
+      text-shadow: 0 0 60px rgba(255,201,107,.35);
+    }
+
+    .offer-sub {
+      max-width: 520px;
+      margin: 1rem auto 0;
+      color: var(--muted);
+      font-size: clamp(.95rem, 2.5vw, 1.15rem);
+    }
+
+    .timer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      margin: 1.5rem auto 0;
+      padding: .6rem 1.2rem;
+      border-radius: 999px;
+      background: rgba(255,81,77,.1);
+      border: 1px solid rgba(255,81,77,.4);
+      color: var(--red);
+      font-weight: 800;
+      font-size: 1rem;
+      max-width: 280px;
+    }
+
+    .timer-bar .dot { animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .offer-cta {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 1rem 2.4rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ffc96b, #ffad3a);
+      color: #1a1200;
+      font-size: 1.15rem;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 32px rgba(255,201,107,.35);
+      transition: transform .15s, box-shadow .15s;
+      letter-spacing: .01em;
+    }
+    .offer-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 44px rgba(255,201,107,.45); }
+
+    .offer-fine {
+      margin-top: 1.4rem;
+      color: var(--muted);
+      font-size: .78rem;
+      max-width: 400px;
+    }
+
+    /* ─── PERMISSION MODAL OVERLAY ─── */
+    #perm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,5,8,.82);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+      animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+    .perm-modal {
+      width: min(100%, 400px);
+      border-radius: 20px;
+      background: #1e2128;
+      border: 1px solid #35383f;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,.7);
+      animation: slideUp .3s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes slideUp { from { transform: translateY(40px) scale(.95); opacity:0; } to { transform: none; opacity:1; } }
+
+    .perm-modal-header {
+      padding: 1.4rem 1.4rem .8rem;
+      text-align: center;
+      border-bottom: 1px solid #2a2d33;
+    }
+
+    .perm-modal-header .app-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ffc96b, #ff7c3a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto .75rem;
+      box-shadow: 0 4px 20px rgba(255,201,107,.3);
+    }
+
+    .perm-modal-header .site-name {
+      font-size: .78rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: .2rem;
+    }
+
+    .perm-modal-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .perm-modal-header p {
+      margin: .5rem 0 0;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .perm-list {
+      padding: .9rem 1.4rem;
+      list-style: none;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .55rem;
+    }
+
+    .perm-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      padding: .65rem .8rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,.04);
+      font-size: .9rem;
+    }
+
+    .perm-list li.granted  { background: rgba(131,227,161,.08); border: 1px solid rgba(131,227,161,.2); }
+    .perm-list li.pending  { background: rgba(255,201,107,.06); border: 1px solid rgba(255,201,107,.18); }
+    .perm-list li.waiting  { opacity: .45; border: 1px solid #2e3038; }
+
+    .perm-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: .05rem; }
+
+    .perm-info strong { display: block; font-size: .9rem; }
+    .perm-info span   { font-size: .78rem; color: var(--muted); }
+
+    .perm-status {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: .75rem;
+      font-weight: 800;
+      padding: .2rem .55rem;
+      border-radius: 999px;
+      align-self: center;
+    }
+    .granted .perm-status  { background: rgba(131,227,161,.18); color: var(--green); }
+    .pending .perm-status  { background: rgba(255,201,107,.18); color: var(--amber); animation: pulse 1.2s ease-in-out infinite; }
+    .waiting .perm-status  { background: rgba(255,255,255,.07); color: var(--muted); }
+
+    @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.5 } }
+
+    .perm-modal-actions {
+      padding: .9rem 1.4rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+
+    .btn-allow {
+      width: 100%;
+      padding: .85rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ffc96b, #ffad3a);
+      color: #1a1200;
+      font-size: 1rem;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+      transition: transform .12s, box-shadow .12s;
+      box-shadow: 0 4px 20px rgba(255,201,107,.3);
+    }
+    .btn-allow:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(255,201,107,.4); }
+    .btn-allow:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .btn-deny {
+      width: 100%;
+      padding: .7rem;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 700;
+      border: 1px solid #35383f;
+      cursor: pointer;
+      transition: color .12s, border-color .12s;
+    }
+    .btn-deny:hover { color: var(--text); border-color: var(--muted); }
+
+    .perm-note {
+      text-align: center;
+      font-size: .72rem;
+      color: #5a5d65;
+      padding: 0 1.4rem .8rem;
+    }
+
+    /* ─── PHASE 3: HACKED REVEAL ─── */
+    #hacked-page {
+      min-height: 100dvh;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(255,81,77,.22), transparent 55%),
+        var(--bg);
+    }
 
     .wrap {
-      width: min(100% - 2rem, 940px);
+      width: min(100% - 2rem, 960px);
       margin-inline: auto;
     }
 
@@ -52,17 +304,15 @@
       letter-spacing: .12em;
       text-transform: uppercase;
     }
-
     .status-dot {
-      width: .6rem;
-      height: .6rem;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 14px rgba(131, 227, 161, .6);
+      width: .6rem; height: .6rem; border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 14px rgba(255,81,77,.7);
+      animation: blink 1s step-end infinite;
     }
 
     .hero {
-      padding: clamp(2.5rem, 9vw, 6.5rem) 0 3rem;
+      padding: clamp(2rem, 7vw, 5rem) 0 2rem;
       text-align: center;
     }
 
@@ -70,9 +320,9 @@
       display: inline-block;
       margin-bottom: 1rem;
       padding: .3rem .75rem;
-      border: 1px solid rgba(255, 81, 77, .48);
+      border: 1px solid rgba(255,81,77,.48);
       border-radius: 999px;
-      background: rgba(255, 81, 77, .1);
+      background: rgba(255,81,77,.1);
       color: #ffb1ab;
       font-size: .76rem;
       font-weight: 800;
@@ -80,107 +330,114 @@
       text-transform: uppercase;
     }
 
-    h1 {
+    h1.hacked {
       margin: 0;
       color: var(--red);
-      font-size: clamp(2.5rem, 9vw, 6.2rem);
+      font-size: clamp(3rem, 13vw, 8rem);
       font-weight: 950;
-      letter-spacing: -.065em;
-      line-height: .98;
-      text-shadow: 0 0 36px rgba(255, 81, 77, .18);
+      letter-spacing: -.06em;
+      line-height: .93;
+      text-shadow: 0 0 60px rgba(255,81,77,.35), 0 0 2px rgba(255,81,77,.8);
+      animation: glitch 4s infinite;
+    }
+
+    @keyframes glitch {
+      0%,95%,100% { text-shadow: 0 0 60px rgba(255,81,77,.35), 0 0 2px rgba(255,81,77,.8); transform: none; }
+      96%  { transform: translate(-3px, 1px) skewX(-2deg); text-shadow: -4px 0 #ff514d, 4px 0 #5b8dfa; }
+      97%  { transform: translate(3px,-1px) skewX( 2deg); text-shadow:  4px 0 #ff514d,-4px 0 #5b8dfa; }
+      98%  { transform: none; }
     }
 
     .hero p {
-      max-width: 650px;
+      max-width: 600px;
       margin: 1.5rem auto 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
     }
 
-    .truth {
+    /* Granted permissions showcase */
+    .permissions-reveal {
+      margin: 2rem auto;
+      padding: clamp(1.2rem, 5vw, 2rem);
+      border: 1px solid rgba(255,81,77,.4);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,81,77,.09), rgba(255,81,77,.025));
+      max-width: 760px;
+    }
+
+    .permissions-reveal h2 {
+      margin: 0 0 1.2rem;
+      font-size: clamp(1.3rem, 4vw, 1.9rem);
+      color: var(--red);
+      letter-spacing: -.03em;
+    }
+
+    .granted-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%,210px), 1fr));
+      gap: .75rem;
+    }
+
+    .granted-card {
+      padding: 1rem 1.1rem;
+      border-radius: 12px;
+      background: rgba(255,81,77,.08);
+      border: 1px solid rgba(255,81,77,.22);
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+    }
+
+    .granted-card .g-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .granted-card strong { display: block; font-size: .9rem; color: var(--text); margin-bottom: .15rem; }
+    .granted-card span   { font-size: .78rem; color: var(--muted); }
+    .granted-card .real-badge {
+      display: inline-block;
+      margin-top: .35rem;
+      font-size: .68rem;
+      font-weight: 800;
+      padding: .1rem .45rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+    .real-badge.real   { background: rgba(255,81,77,.18); color: var(--red); }
+    .real-badge.sim    { background: rgba(255,201,107,.18); color: var(--amber); }
+
+    /* truth banner */
+    .truth-banner {
       display: grid;
       grid-template-columns: auto 1fr;
       align-items: start;
       gap: .85rem;
-      margin: 0 auto 3rem;
-      padding: 1.2rem 1.3rem;
-      border: 1px solid rgba(131, 227, 161, .38);
-      border-radius: 14px;
-      background: rgba(131, 227, 161, .07);
-    }
-
-    .truth-icon { color: var(--green); font-size: 1.25rem; }
-    .truth strong { color: var(--green); }
-    .truth p { margin: .15rem 0 0; color: var(--muted); }
-
-    .offer-panel {
-      max-width: 720px;
       margin: 2rem auto;
-      padding: clamp(1.3rem, 5vw, 2.2rem);
-      border: 1px solid rgba(255, 201, 107, .38);
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(255, 201, 107, .09), rgba(255, 201, 107, .025));
+      padding: 1.2rem 1.3rem;
+      border: 1px solid rgba(131,227,161,.38);
+      border-radius: 14px;
+      background: rgba(131,227,161,.07);
+      max-width: 760px;
     }
+    .truth-icon { color: var(--green); font-size: 1.3rem; }
+    .truth-banner strong { color: var(--green); }
+    .truth-banner p { margin: .15rem 0 0; color: var(--muted); }
 
-    .offer-panel h1 { font-size: clamp(2.2rem, 8vw, 4.5rem); }
-    .offer-panel h2 { margin-top: 1.8rem; color: var(--amber); font-size: 1.2rem; }
-    .offer-panel p, .offer-panel li { color: var(--muted); }
-    .offer-panel ul { padding-left: 1.25rem; }
-    .offer-panel li + li { margin-top: .35rem; }
+    /* data cards */
+    section { padding: 1.5rem 0 3rem; }
 
-    .simulation-notice {
-      margin-top: 1.5rem;
-      padding: .9rem 1rem;
-      border: 1px solid rgba(131, 227, 161, .38);
-      border-radius: 10px;
-      background: rgba(131, 227, 161, .07);
-      color: var(--green) !important;
-      font-weight: 700;
-    }
-
-    .offer-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.2rem; }
-
-    .offer-actions button {
-      min-height: 2.8rem;
-      padding: .65rem 1rem;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel-soft);
-      color: var(--text);
-      font: inherit;
-      font-weight: 750;
-      cursor: pointer;
-    }
-
-    .offer-actions button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
-    .offer-actions button:first-child { border-color: var(--red); background: #522421; }
-    [hidden] { display: none !important; }
-
-    section { padding: 1.5rem 0 3.5rem; }
-
-    .section-heading {
-      margin-bottom: 1.25rem;
-    }
-
+    .section-heading { margin-bottom: 1.25rem; }
     h2 {
       margin: 0;
-      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      font-size: clamp(1.6rem, 4.5vw, 2.4rem);
       letter-spacing: -.04em;
       line-height: 1.15;
     }
-
-    .section-heading p {
-      max-width: 680px;
-      margin: .65rem 0 0;
-      color: var(--muted);
-    }
+    .section-heading p { max-width: 680px; margin: .65rem 0 0; color: var(--muted); }
 
     .data-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 255px), 1fr));
       gap: .8rem;
     }
-
     .data-card {
       min-width: 0;
       padding: 1rem 1.1rem;
@@ -188,7 +445,6 @@
       border-radius: 12px;
       background: var(--panel);
     }
-
     .data-card dt {
       margin-bottom: .35rem;
       color: var(--muted);
@@ -197,7 +453,6 @@
       letter-spacing: .07em;
       text-transform: uppercase;
     }
-
     .data-card dd {
       overflow-wrap: anywhere;
       margin: 0;
@@ -205,41 +460,31 @@
       font-weight: 750;
     }
 
-    .privacy-note {
-      margin: 1rem 0 0;
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
+    .privacy-note { margin: 1rem 0 0; color: var(--muted); font-size: .9rem; }
     .privacy-note strong { color: var(--green); }
 
     .exposure-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
       gap: .85rem;
-      margin: 0;
-      padding: 0;
-      list-style: none;
+      margin: 0; padding: 0; list-style: none;
     }
-
     .exposure-list li {
       padding: 1.15rem;
       border: 1px solid var(--line);
       border-radius: 12px;
       background: var(--panel);
     }
-
     .exposure-list strong { display: block; margin-bottom: .35rem; }
-    .exposure-list span { color: var(--muted); }
+    .exposure-list span   { color: var(--muted); }
     .permission { color: var(--amber) !important; }
 
     .lesson {
       padding: clamp(1.3rem, 5vw, 2.2rem);
-      border: 1px solid rgba(255, 201, 107, .38);
+      border: 1px solid rgba(255,201,107,.38);
       border-radius: 16px;
-      background: linear-gradient(135deg, rgba(255, 201, 107, .09), rgba(255, 201, 107, .025));
+      background: linear-gradient(135deg, rgba(255,201,107,.09), rgba(255,201,107,.025));
     }
-
     .lesson h2 { color: var(--amber); }
     .lesson ul { margin-bottom: 0; padding-left: 1.25rem; }
     .lesson li + li { margin-top: .45rem; }
@@ -250,191 +495,444 @@
       color: var(--muted);
       font-size: .88rem;
     }
-
     footer p { margin: .3rem 0; }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
+      h1.hacked { animation: none; }
+      .perm-modal { animation: none; }
     }
   </style>
 </head>
 <body>
-  <header class="wrap">
-    <div class="topline"><span class="status-dot" aria-hidden="true"></span> Safe simulation · no tracking</div>
-  </header>
 
-  <main>
-    <section class="wrap" id="offer-screen" aria-labelledby="offer-heading" hidden>
-      <div class="offer-panel">
-        <span class="eyebrow">Interactive awareness simulation</span>
-        <h1 id="offer-heading">CLAIM YOUR<br>FREE REWARD</h1>
-        <p>A page may use an exciting offer and a sense of urgency to pressure you into sharing information or granting access.</p>
-        <h2>This offer claims it needs access to:</h2>
-        <ul>
-          <li>Your contacts</li>
-          <li>Your photos and files</li>
-          <li>Your call history</li>
-        </ul>
-        <p class="simulation-notice">Safe demo: these are pretend requests. No browser permission prompt will appear, and this page will not access or collect anything.</p>
-        <div class="offer-actions" aria-label="Choose how to respond">
-          <button type="button" data-choice="accept">Accept offer (simulation)</button>
-          <button type="button" data-choice="decline">Decline offer</button>
-        </div>
+  <!-- ══════════════════════════════════════
+       PHASE 1 — OFFER LANDING
+  ═══════════════════════════════════════ -->
+  <div id="offer-page">
+    <span class="offer-badge">🎉 Exclusive Reward — Limited Time</span>
+    <h1>CLAIM YOUR<br>FREE GIFT!</h1>
+    <p class="offer-sub">You have been selected for an exclusive reward worth <strong>$500</strong>. Tap the button below to unlock your offer instantly — no credit card required.</p>
+
+    <div class="timer-bar">
+      <span class="dot">●</span>
+      <span>Expires in <span id="countdown">04:59</span></span>
+    </div>
+
+    <button class="offer-cta" id="claim-btn" type="button">🎁 Claim My Free Gift Now</button>
+
+    <p class="offer-fine">By claiming, you agree to our terms. We may need to verify your device to deliver your reward.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PHASE 2 — PERMISSION MODAL (overlay)
+  ═══════════════════════════════════════ -->
+  <div id="perm-overlay" hidden aria-modal="true" role="dialog" aria-labelledby="perm-title">
+    <div class="perm-modal">
+      <div class="perm-modal-header">
+        <div class="app-icon" aria-hidden="true">🎁</div>
+        <div class="site-name">rewardclaim-secure.app</div>
+        <h3 id="perm-title">To deliver your reward, we need a few permissions</h3>
+        <p>These are required to verify your identity and process your gift.</p>
       </div>
-    </section>
 
-    <div class="wrap" id="awareness-content">
-      <section class="hero" aria-labelledby="headline">
+      <ul class="perm-list" id="perm-list">
+        <li class="waiting" data-perm="contacts">
+          <span class="perm-icon">👥</span>
+          <div class="perm-info">
+            <strong>Read Contacts</strong>
+            <span>Verify your identity against your contact list</span>
+          </div>
+          <span class="perm-status">Waiting</span>
+        </li>
+        <li class="waiting" data-perm="storage">
+          <span class="perm-icon">📂</span>
+          <div class="perm-info">
+            <strong>Access Storage & Files</strong>
+            <span>Needed to store your reward voucher securely</span>
+          </div>
+          <span class="perm-status">Waiting</span>
+        </li>
+        <li class="waiting" data-perm="calls">
+          <span class="perm-icon">📞</span>
+          <div class="perm-info">
+            <strong>Read Call History</strong>
+            <span>Confirm account eligibility via call records</span>
+          </div>
+          <span class="perm-status">Waiting</span>
+        </li>
+        <li class="waiting" data-perm="location">
+          <span class="perm-icon">📍</span>
+          <div class="perm-info">
+            <strong>Precise Location</strong>
+            <span>Required for regional reward delivery</span>
+          </div>
+          <span class="perm-status">Waiting</span>
+        </li>
+        <li class="waiting" data-perm="camera">
+          <span class="perm-icon">📷</span>
+          <div class="perm-info">
+            <strong>Camera Access</strong>
+            <span>Quick selfie verification to unlock your reward</span>
+          </div>
+          <span class="perm-status">Waiting</span>
+        </li>
+        <li class="waiting" data-perm="microphone">
+          <span class="perm-icon">🎤</span>
+          <div class="perm-info">
+            <strong>Microphone Access</strong>
+            <span>Voice confirmation for secure processing</span>
+          </div>
+          <span class="perm-status">Waiting</span>
+        </li>
+        <li class="waiting" data-perm="notifications">
+          <span class="perm-icon">🔔</span>
+          <div class="perm-info">
+            <strong>Push Notifications</strong>
+            <span>Get instant updates on your reward status</span>
+          </div>
+          <span class="perm-status">Waiting</span>
+        </li>
+      </ul>
+
+      <div class="perm-modal-actions">
+        <button class="btn-allow" id="allow-btn" type="button">✅ Allow All &amp; Claim Reward</button>
+        <button class="btn-deny" id="deny-btn" type="button">No thanks, skip offer</button>
+      </div>
+      <p class="perm-note">Your data is processed securely and never shared with third parties.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PHASE 3 — HACKED REVEAL
+  ═══════════════════════════════════════ -->
+  <div id="hacked-page" hidden>
+    <header class="wrap">
+      <div class="topline"><span class="status-dot" aria-hidden="true"></span> Phishing awareness demo · no data collected</div>
+    </header>
+
+    <main>
+      <section class="wrap hero" aria-labelledby="hacked-headline">
         <span class="eyebrow">Phishing awareness demonstration</span>
-        <h1 id="headline" tabindex="-1">YOU'VE BEEN<br>HACKED!</h1>
-        <p>That’s what a convincing scare message wants you to believe. Take a breath—this page is a safe demonstration, not an attack.</p>
+        <h1 class="hacked" id="hacked-headline" tabindex="-1">YOU'VE BEEN<br>HACKED!</h1>
+        <p>That's what a convincing scam wants you to think. Take a breath — this page is a <strong>safe simulation</strong>, not a real attack.</p>
       </section>
 
-      <aside class="truth" aria-label="Important privacy notice">
-        <span class="truth-icon" aria-hidden="true">✓</span>
-        <div>
-          <strong>You were not hacked. Nothing was accessed.</strong>
-          <p id="reveal-message">This page reads a few ordinary browser settings to demonstrate what a site may see. It does not save, transmit, or share them. The offer and access requests were simulated; no permissions were requested.</p>
+      <!-- Permissions granted showcase -->
+      <div class="wrap">
+        <div class="permissions-reveal" id="permissions-reveal" aria-label="Permissions breakdown">
+          <h2 id="perm-reveal-title">🔓 Here's what you just "granted"</h2>
+          <div class="granted-grid" id="granted-grid">
+            <!-- JS fills this -->
+          </div>
         </div>
-      </aside>
 
-      <section aria-labelledby="browser-heading">
-        <div class="section-heading">
-          <h2 id="browser-heading">What this browser reveals</h2>
-          <p>These values are read on your device. Some browser APIs also expose coarse hardware and network hints; they are estimates, not a device inventory.</p>
+        <!-- Truth banner -->
+        <div class="truth-banner" aria-label="Important privacy notice">
+          <span class="truth-icon" aria-hidden="true">✓</span>
+          <div>
+            <strong>You were NOT actually hacked. Nothing was accessed.</strong>
+            <p id="reveal-message">This is an educational simulation. The permission pop-up was fake — no real browser permission for contacts, storage, or call history exists on the web. The requests that do have real browser APIs (location, camera, microphone, notifications) were triggered, but only your browser's decision matters, and this page does not collect or transmit anything.</p>
+          </div>
         </div>
-        <dl class="data-grid" id="browser-data" aria-live="polite">
-          <div class="data-card"><dt>Browser</dt><dd data-value="browser">Reading locally…</dd></div>
-          <div class="data-card"><dt>Operating system hint</dt><dd data-value="platform">Reading locally…</dd></div>
-          <div class="data-card"><dt>Language preference</dt><dd data-value="language">Reading locally…</dd></div>
-          <div class="data-card"><dt>Time zone</dt><dd data-value="timezone">Reading locally…</dd></div>
-          <div class="data-card"><dt>Screen resolution</dt><dd data-value="screen">Reading locally…</dd></div>
-          <div class="data-card"><dt>Page viewport</dt><dd data-value="viewport">Reading locally…</dd></div>
-          <div class="data-card"><dt>Color depth</dt><dd data-value="color">Reading locally…</dd></div>
-          <div class="data-card"><dt>Cookies enabled</dt><dd data-value="cookies">Reading locally…</dd></div>
-          <div class="data-card"><dt>Browser reports online</dt><dd data-value="online">Reading locally…</dd></div>
-          <div class="data-card"><dt>Touch points reported</dt><dd data-value="touch">Reading locally…</dd></div>
-          <div class="data-card"><dt>CPU threads reported</dt><dd data-value="cpu">Reading locally…</dd></div>
-          <div class="data-card"><dt>Approximate device memory</dt><dd data-value="memory">Reading locally…</dd></div>
-          <div class="data-card"><dt>Network estimate</dt><dd data-value="connection">Reading locally…</dd></div>
-          <div class="data-card"><dt>Display pixel ratio</dt><dd data-value="pixel-ratio">Reading locally…</dd></div>
-        </dl>
-        <p class="privacy-note"><strong>Privacy check:</strong> These details are not sent anywhere by this demo. CPU threads and memory are coarse browser-reported estimates, and some browsers hide them. A real website can receive your IP address at its server when you connect; this page does not display or look up your IP address.</p>
-      </section>
 
-      <section aria-labelledby="limits-heading">
-        <div class="section-heading">
-          <h2 id="limits-heading">What a normal website cannot just read</h2>
-          <p>A web page runs inside browser security boundaries. It does not get unrestricted access to everything on your device.</p>
-        </div>
-        <ul class="exposure-list">
-          <li><strong>Phone number and installed apps</strong><span>A website cannot silently read your phone number or get a list of apps installed on your device.</span></li>
-          <li><strong>Contacts, files, and call history</strong><span>A normal website cannot silently read your contacts, browse all your files, or inspect call history. Some browsers let you choose specific contacts or files to share; that is not full-device access.</span></li>
-          <li><strong>Device name and serial number</strong><span>These identifiers are not generally exposed to ordinary websites. A browser may share limited device hints, but that is not the same as a unique device inventory.</span></li>
-          <li><strong>Exact model, CPU, and RAM</strong><span>Browsers may reveal broad platform hints or coarse estimates, such as logical CPU threads and approximate memory. They do not provide a reliable exact hardware report.</span></li>
-          <li><strong>Location, camera, and microphone</strong><span class="permission">These features require browser permission. A page should explain why it needs access, and you can deny or revoke it.</span></li>
-        </ul>
-      </section>
+        <!-- Browser data section -->
+        <section aria-labelledby="browser-heading">
+          <div class="section-heading">
+            <h2 id="browser-heading">What this browser reveals — without any permission</h2>
+            <p>Even without pressing "Allow", a web page can read these values the moment you visit it. No pop-up needed.</p>
+          </div>
+          <dl class="data-grid" id="browser-data" aria-live="polite">
+            <div class="data-card"><dt>Browser</dt><dd data-value="browser">Reading…</dd></div>
+            <div class="data-card"><dt>Operating system hint</dt><dd data-value="platform">Reading…</dd></div>
+            <div class="data-card"><dt>Language preference</dt><dd data-value="language">Reading…</dd></div>
+            <div class="data-card"><dt>Time zone</dt><dd data-value="timezone">Reading…</dd></div>
+            <div class="data-card"><dt>Screen resolution</dt><dd data-value="screen">Reading…</dd></div>
+            <div class="data-card"><dt>Page viewport</dt><dd data-value="viewport">Reading…</dd></div>
+            <div class="data-card"><dt>Color depth</dt><dd data-value="color">Reading…</dd></div>
+            <div class="data-card"><dt>Cookies enabled</dt><dd data-value="cookies">Reading…</dd></div>
+            <div class="data-card"><dt>Browser reports online</dt><dd data-value="online">Reading…</dd></div>
+            <div class="data-card"><dt>Touch points reported</dt><dd data-value="touch">Reading…</dd></div>
+            <div class="data-card"><dt>CPU threads reported</dt><dd data-value="cpu">Reading…</dd></div>
+            <div class="data-card"><dt>Approx. device memory</dt><dd data-value="memory">Reading…</dd></div>
+            <div class="data-card"><dt>Network estimate</dt><dd data-value="connection">Reading…</dd></div>
+            <div class="data-card"><dt>Display pixel ratio</dt><dd data-value="pixel-ratio">Reading…</dd></div>
+          </dl>
+          <p class="privacy-note"><strong>Privacy check:</strong> These values are read locally on your device. This demo does not send them anywhere. A real attacker's server would receive your IP address the moment you connect; this page does not display or look up your IP.</p>
+        </section>
 
-      <section aria-labelledby="more-heading">
-        <div class="section-heading">
-          <h2 id="more-heading">What a website might learn</h2>
-          <p>Not everything is secretly available to a web page. Some information is shared as part of normal browsing; sensitive features require permission.</p>
-        </div>
-        <ul class="exposure-list">
-          <li><strong>Connection details</strong><span>Your IP address is visible to the website’s server and may indicate an approximate region or internet provider.</span></li>
-          <li><strong>Browser and device hints</strong><span>Browser settings and device characteristics can be combined to distinguish visits. Limiting tracking and using privacy protections can help.</span></li>
-          <li><strong>Location</strong><span class="permission">Precise location requires your permission in the browser. Don’t approve it for a site without a clear reason.</span></li>
-          <li><strong>Camera and microphone</strong><span class="permission">A site must request permission to use them. A suspicious page has no good reason to ask unexpectedly.</span></li>
-          <li><strong>Information you enter</strong><span>Names, passwords, payment details, and one-time codes can be exposed if you type them into a fake form.</span></li>
-          <li><strong>Activity on the page</strong><span>A site can observe interactions on its own pages. Be cautious with unexpected links, downloads, and urgent requests.</span></li>
-        </ul>
-      </section>
+        <section aria-labelledby="limits-heading">
+          <div class="section-heading">
+            <h2 id="limits-heading">What a normal website CANNOT silently read</h2>
+            <p>Browsers have security boundaries. These things require explicit permission or are simply not accessible to web pages at all.</p>
+          </div>
+          <ul class="exposure-list">
+            <li><strong>Phone number &amp; installed apps</strong><span>Not exposed. A website cannot read your phone number or list your installed apps.</span></li>
+            <li><strong>Contacts, files &amp; call history</strong><span>Not a web API. Those pop-ups were fake — no such browser permission exists. Only native apps with OS permission can read these.</span></li>
+            <li><strong>Device name &amp; serial number</strong><span>Not provided to websites. At most, a browser shares broad platform hints.</span></li>
+            <li><strong>Exact CPU model &amp; full RAM</strong><span>Browsers share coarse estimates only (threads, approximate GB) — not a hardware inventory.</span></li>
+            <li><strong>Location, camera &amp; microphone</strong><span class="permission">These require an explicit browser permission prompt. You can always deny or revoke it.</span></li>
+          </ul>
+        </section>
 
-      <section class="lesson" aria-labelledby="lesson-heading">
-        <h2 id="lesson-heading">Pause before you trust a message</h2>
-        <ul>
-          <li>Check the sender and the real destination of links—watch for misspellings and look-alike domains.</li>
-          <li>Don’t share passwords, payment details, or verification codes through a link in an unexpected message.</li>
-          <li>Verify urgent requests using a known, official website or phone number—not the contact details in the message.</li>
-          <li>If you entered a password, go directly to the real service, change it, and turn on multi-factor authentication.</li>
-        </ul>
-      </section>
-    </div>
-  </main>
+        <section aria-labelledby="more-heading">
+          <div class="section-heading">
+            <h2 id="more-heading">What a website might actually learn</h2>
+            <p>Some information is shared as part of normal browsing; sensitive features require your explicit consent.</p>
+          </div>
+          <ul class="exposure-list">
+            <li><strong>Your IP address</strong><span>Visible to the website's server. May indicate a rough region or internet provider.</span></li>
+            <li><strong>Browser &amp; device fingerprint</strong><span>Browser settings combined can be used to track visits. Privacy extensions can help.</span></li>
+            <li><strong>Location</strong><span class="permission">Requires your permission. Never approve it for a site without a clear reason.</span></li>
+            <li><strong>Camera &amp; microphone</strong><span class="permission">Must request permission. A suspicious offer page has no good reason to ask.</span></li>
+            <li><strong>What you type</strong><span>Passwords, card numbers, verification codes — fake forms exist to steal these.</span></li>
+            <li><strong>Your interactions</strong><span>A site tracks clicks, scrolls, and navigation on its own pages.</span></li>
+          </ul>
+        </section>
 
-  <footer>
-    <div class="wrap">
-      <p>Made for security awareness. This static page uses no analytics, cookies, external scripts, or data-collection services.</p>
-      <p>Browser details are approximate signals, not proof that a device has been compromised.</p>
-    </div>
-  </footer>
+        <section class="lesson" aria-labelledby="lesson-heading">
+          <h2 id="lesson-heading">🛡️ Pause before you trust a message</h2>
+          <ul>
+            <li>Urgency and big rewards are classic manipulation tactics — slow down.</li>
+            <li>Check the real URL carefully. Scammers use look-alike domains (e.g. <em>paypa1.com</em>).</li>
+            <li>Never grant camera, microphone, or location to a page you didn't intentionally open.</li>
+            <li>No browser can read your contacts, files, or call history from a web page — that claim is always a lie.</li>
+            <li>Don't share passwords, card details, or verification codes through an unexpected link.</li>
+            <li>If something feels off, close the tab and go directly to the real website.</li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <p>Made for security awareness. This static page uses no analytics, cookies, external scripts, or data-collection services.</p>
+        <p>Browser details are approximate signals, not proof that a device has been compromised.</p>
+      </div>
+    </footer>
+  </div>
 
   <script>
     (() => {
-      const offerScreen = document.getElementById("offer-screen");
-      const awarenessContent = document.getElementById("awareness-content");
-      const revealMessage = document.getElementById("reveal-message");
-      const headline = document.getElementById("headline");
+      /* ── helpers ── */
+      const $ = id => document.getElementById(id);
 
-      if (offerScreen && awarenessContent) {
-        offerScreen.hidden = false;
-        awarenessContent.hidden = true;
+      /* ── countdown timer on offer page ── */
+      let secs = 4 * 60 + 59;
+      const countdownEl = $('countdown');
+      const countdownInterval = setInterval(() => {
+        secs--;
+        if (secs <= 0) { clearInterval(countdownInterval); secs = 0; }
+        const m = String(Math.floor(secs / 60)).padStart(2, '0');
+        const s = String(secs % 60).padStart(2, '0');
+        countdownEl.textContent = `${m}:${s}`;
+      }, 1000);
 
-        offerScreen.querySelectorAll("[data-choice]").forEach((button) => {
-          button.addEventListener("click", () => {
-            const accepted = button.getAttribute("data-choice") === "accept";
-            revealMessage.textContent = accepted
-              ? "You chose to accept, but nothing was granted or accessed. The offer and access requests were simulated. No permissions were requested, and this page does not save or send browser details."
-              : "You chose to decline. No access was requested either way. The offer and access requests were simulated, and this page does not save or send browser details.";
-            offerScreen.hidden = true;
-            awarenessContent.hidden = false;
-            headline.focus();
-          });
+      /* ── permission state tracking ── */
+      const permResults = {};  // key → 'granted' | 'denied' | 'simulated'
+
+      /* ─ permission definitions ─ */
+      const perms = [
+        { key: 'contacts',      icon: '👥', label: 'Read Contacts',       desc: 'Full contact list access',         type: 'simulated' },
+        { key: 'storage',       icon: '📂', label: 'Storage & Files',     desc: 'All device files and media',       type: 'simulated' },
+        { key: 'calls',         icon: '📞', label: 'Call History',        desc: 'Incoming & outgoing call records', type: 'simulated' },
+        { key: 'location',      icon: '📍', label: 'Precise Location',    desc: 'GPS coordinates',                  type: 'real',      api: 'geolocation' },
+        { key: 'camera',        icon: '📷', label: 'Camera',              desc: 'Video stream from your camera',    type: 'real',      api: 'camera' },
+        { key: 'microphone',    icon: '🎤', label: 'Microphone',          desc: 'Live audio from your mic',         type: 'real',      api: 'microphone' },
+        { key: 'notifications', icon: '🔔', label: 'Push Notifications',  desc: 'Send you messages anytime',        type: 'real',      api: 'notifications' },
+      ];
+
+      /* ── open permission modal when user clicks Claim ── */
+      $('claim-btn').addEventListener('click', () => {
+        $('offer-page').hidden = true;
+        $('perm-overlay').hidden = false;
+      });
+
+      /* ── Allow button — fire real browser permission requests ── */
+      $('allow-btn').addEventListener('click', async () => {
+        const allowBtn = $('allow-btn');
+        allowBtn.disabled = true;
+        allowBtn.textContent = '⏳ Processing…';
+
+        const listItems = document.querySelectorAll('#perm-list [data-perm]');
+        const itemMap   = {};
+        listItems.forEach(li => { itemMap[li.dataset.perm] = li; });
+
+        const setStatus = (key, state) => {
+          const li = itemMap[key];
+          if (!li) return;
+          li.className = state;
+          li.querySelector('.perm-status').textContent =
+            state === 'granted' ? '✓ Granted' :
+            state === 'pending' ? '⏳ Asking…' : '✗ Denied';
+          permResults[key] = state;
+        };
+
+        /* helper: delay */
+        const wait = ms => new Promise(r => setTimeout(r, ms));
+
+        /* — Simulated permissions (fake, no real API) — */
+        for (const p of perms.filter(p => p.type === 'simulated')) {
+          setStatus(p.key, 'pending');
+          await wait(600);
+          setStatus(p.key, 'granted');   // always "granted" in simulation
+          permResults[p.key] = 'simulated';
+          await wait(300);
+        }
+
+        /* — Real browser permission requests — */
+        // Location
+        setStatus('location', 'pending');
+        await wait(400);
+        try {
+          await new Promise((res, rej) =>
+            navigator.geolocation.getCurrentPosition(res, rej, { timeout: 6000 }));
+          setStatus('location', 'granted');
+          permResults['location'] = 'granted';
+        } catch {
+          setStatus('location', 'denied');
+          permResults['location'] = 'denied';
+        }
+        await wait(300);
+
+        // Camera + Microphone
+        setStatus('camera', 'pending');
+        setStatus('microphone', 'pending');
+        await wait(400);
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          stream.getTracks().forEach(t => t.stop());   // stop immediately
+          setStatus('camera', 'granted');
+          setStatus('microphone', 'granted');
+          permResults['camera']     = 'granted';
+          permResults['microphone'] = 'granted';
+        } catch {
+          setStatus('camera', 'denied');
+          setStatus('microphone', 'denied');
+          permResults['camera']     = 'denied';
+          permResults['microphone'] = 'denied';
+        }
+        await wait(300);
+
+        // Notifications
+        setStatus('notifications', 'pending');
+        await wait(400);
+        try {
+          const result = await Notification.requestPermission();
+          setStatus('notifications', result === 'granted' ? 'granted' : 'denied');
+          permResults['notifications'] = result === 'granted' ? 'granted' : 'denied';
+        } catch {
+          setStatus('notifications', 'denied');
+          permResults['notifications'] = 'denied';
+        }
+
+        await wait(700);
+        showHackedPage();
+      });
+
+      /* ── Deny button — go to reveal anyway ── */
+      $('deny-btn').addEventListener('click', () => {
+        perms.forEach(p => { permResults[p.key] = 'denied'; });
+        showHackedPage();
+      });
+
+      /* ── Build & show the hacked reveal page ── */
+      function showHackedPage() {
+        $('perm-overlay').hidden = true;
+        $('hacked-page').hidden  = false;
+        $('hacked-headline').focus();
+
+        buildGrantedGrid();
+        populateBrowserData();
+      }
+
+      function buildGrantedGrid() {
+        const grid = $('granted-grid');
+        grid.innerHTML = '';
+
+        perms.forEach(p => {
+          const result  = permResults[p.key] || 'denied';
+          const isReal  = p.type === 'real';
+          const isSim   = p.type === 'simulated';
+
+          let statusLabel, statusColor, badgeText, badgeClass;
+
+          if (result === 'simulated') {
+            statusLabel = '⚠️ FAKED';
+            statusColor = 'var(--amber)';
+            badgeText   = 'Simulated — not real';
+            badgeClass  = 'sim';
+          } else if (result === 'granted') {
+            statusLabel = '🔓 GRANTED';
+            statusColor = 'var(--red)';
+            badgeText   = 'Real browser permission';
+            badgeClass  = 'real';
+          } else {
+            statusLabel = '🔒 Denied';
+            statusColor = 'var(--green)';
+            badgeText   = isReal ? 'Real — you wisely denied' : 'Simulated';
+            badgeClass  = isReal ? 'real' : 'sim';
+          }
+
+          grid.insertAdjacentHTML('beforeend', `
+            <div class="granted-card">
+              <div class="g-icon">${p.icon}</div>
+              <div>
+                <strong>${p.label}</strong>
+                <span>${p.desc}</span><br>
+                <span style="font-weight:800;color:${statusColor}">${statusLabel}</span><br>
+                <span class="real-badge ${badgeClass}">${badgeText}</span>
+              </div>
+            </div>
+          `);
         });
       }
 
-      const ua = navigator.userAgent;
-      let browser = "Other browser";
-      if (/Edg\//.test(ua)) browser = "Microsoft Edge";
-      else if (/OPR\//.test(ua)) browser = "Opera";
-      else if (/Firefox\//.test(ua)) browser = "Mozilla Firefox";
-      else if (/Chrome\//.test(ua) && !/Chromium/.test(ua)) browser = "Google Chrome";
-      else if (/Safari\//.test(ua) && !/Chrome|Chromium/.test(ua)) browser = "Apple Safari";
+      /* ── Browser fingerprint data ── */
+      function populateBrowserData() {
+        const ua = navigator.userAgent;
+        let browser = 'Other browser';
+        if      (/Edg\//.test(ua))                             browser = 'Microsoft Edge';
+        else if (/OPR\//.test(ua))                             browser = 'Opera';
+        else if (/Firefox\//.test(ua))                         browser = 'Mozilla Firefox';
+        else if (/Chrome\//.test(ua) && !/Chromium/.test(ua)) browser = 'Google Chrome';
+        else if (/Safari\//.test(ua) && !/Chrome|Chromium/.test(ua)) browser = 'Apple Safari';
 
-      const values = {
-        browser,
-        platform: navigator.platform || "Not provided by browser",
-        language: navigator.language || "Not provided by browser",
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Not provided by browser",
-        screen: `${screen.width} × ${screen.height} pixels`,
-        viewport: `${innerWidth} × ${innerHeight} pixels`,
-        color: `${screen.colorDepth}-bit`,
-        cookies: navigator.cookieEnabled ? "Yes" : "No",
-        online: navigator.onLine ? "Yes" : "No",
-        touch: String(navigator.maxTouchPoints ?? 0),
-        cpu: Number.isFinite(navigator.hardwareConcurrency) && navigator.hardwareConcurrency > 0
-          ? `${navigator.hardwareConcurrency} logical threads reported`
-          : "Not exposed by browser",
-        memory: Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory > 0
-          ? `About ${navigator.deviceMemory} GB (coarse estimate)`
-          : "Not exposed by browser",
-        connection: navigator.connection?.effectiveType
-          ? `${navigator.connection.effectiveType} (coarse estimate)`
-          : "Not exposed by browser",
-        "pixel-ratio": Number.isFinite(devicePixelRatio) && devicePixelRatio > 0
-          ? `${devicePixelRatio} device pixels per CSS pixel`
-          : "Not exposed by browser"
-      };
+        const values = {
+          browser,
+          platform:     navigator.platform || 'Not provided by browser',
+          language:     navigator.language || 'Not provided by browser',
+          timezone:     Intl.DateTimeFormat().resolvedOptions().timeZone || 'Not provided',
+          screen:       `${screen.width} × ${screen.height} pixels`,
+          viewport:     `${innerWidth} × ${innerHeight} pixels`,
+          color:        `${screen.colorDepth}-bit`,
+          cookies:      navigator.cookieEnabled ? 'Yes' : 'No',
+          online:       navigator.onLine ? 'Yes' : 'No',
+          touch:        String(navigator.maxTouchPoints ?? 0),
+          cpu:          Number.isFinite(navigator.hardwareConcurrency) && navigator.hardwareConcurrency > 0
+                          ? `${navigator.hardwareConcurrency} logical threads`
+                          : 'Not exposed by browser',
+          memory:       Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory > 0
+                          ? `~${navigator.deviceMemory} GB (coarse)`
+                          : 'Not exposed by browser',
+          connection:   navigator.connection?.effectiveType
+                          ? `${navigator.connection.effectiveType} (coarse estimate)`
+                          : 'Not exposed by browser',
+          'pixel-ratio': Number.isFinite(devicePixelRatio) && devicePixelRatio > 0
+                          ? `${devicePixelRatio}x`
+                          : 'Not exposed',
+        };
 
-      document.querySelectorAll("[data-value]").forEach((item) => {
-        const key = item.getAttribute("data-value");
-        item.textContent = values[key];
-      });
+        document.querySelectorAll('[data-value]').forEach(el => {
+          el.textContent = values[el.dataset.value] ?? '—';
+        });
 
-      addEventListener("resize", () => {
-        document.querySelector('[data-value="viewport"]').textContent = `${innerWidth} × ${innerHeight} pixels`;
-      }, { passive: true });
+        addEventListener('resize', () => {
+          document.querySelector('[data-value="viewport"]').textContent =
+            `${innerWidth} × ${innerHeight} pixels`;
+        }, { passive: true });
+      }
+
     })();
   </script>
 </body>
