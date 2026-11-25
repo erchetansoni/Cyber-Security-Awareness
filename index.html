@@ -239,7 +239,7 @@
       <section aria-labelledby="browser-heading">
         <div class="section-heading">
           <h2 id="browser-heading">What this browser reveals</h2>
-          <p>These values are filled in on your device. They can help explain how basic browser details may contribute to a recognizable profile.</p>
+          <p>These values are read on your device. Some browser APIs also expose coarse hardware and network hints; they are estimates, not a device inventory.</p>
         </div>
         <dl class="data-grid" id="browser-data" aria-live="polite">
           <div class="data-card"><dt>Browser</dt><dd data-value="browser">Reading locally…</dd></div>
@@ -252,8 +252,25 @@
           <div class="data-card"><dt>Cookies enabled</dt><dd data-value="cookies">Reading locally…</dd></div>
           <div class="data-card"><dt>Browser reports online</dt><dd data-value="online">Reading locally…</dd></div>
           <div class="data-card"><dt>Touch points reported</dt><dd data-value="touch">Reading locally…</dd></div>
+          <div class="data-card"><dt>CPU threads reported</dt><dd data-value="cpu">Reading locally…</dd></div>
+          <div class="data-card"><dt>Approximate device memory</dt><dd data-value="memory">Reading locally…</dd></div>
+          <div class="data-card"><dt>Network estimate</dt><dd data-value="connection">Reading locally…</dd></div>
+          <div class="data-card"><dt>Display pixel ratio</dt><dd data-value="pixel-ratio">Reading locally…</dd></div>
         </dl>
-        <p class="privacy-note"><strong>Privacy check:</strong> These details are not sent anywhere by this demo. A real website can receive your IP address at its server when you connect; this page does not display or look up your IP address.</p>
+        <p class="privacy-note"><strong>Privacy check:</strong> These details are not sent anywhere by this demo. CPU threads and memory are coarse browser-reported estimates, and some browsers hide them. A real website can receive your IP address at its server when you connect; this page does not display or look up your IP address.</p>
+      </section>
+
+      <section aria-labelledby="limits-heading">
+        <div class="section-heading">
+          <h2 id="limits-heading">What a normal website cannot just read</h2>
+          <p>A web page runs inside browser security boundaries. It does not get unrestricted access to everything on your device.</p>
+        </div>
+        <ul class="exposure-list">
+          <li><strong>Phone number and installed apps</strong><span>A website cannot silently read your phone number or get a list of apps installed on your device.</span></li>
+          <li><strong>Device name and serial number</strong><span>These identifiers are not generally exposed to ordinary websites. A browser may share limited device hints, but that is not the same as a unique device inventory.</span></li>
+          <li><strong>Exact model, CPU, and RAM</strong><span>Browsers may reveal broad platform hints or coarse estimates, such as logical CPU threads and approximate memory. They do not provide a reliable exact hardware report.</span></li>
+          <li><strong>Location, camera, and microphone</strong><span class="permission">These features require browser permission. A page should explain why it needs access, and you can deny or revoke it.</span></li>
+        </ul>
       </section>
 
       <section aria-labelledby="more-heading">
@@ -310,7 +327,19 @@
         color: `${screen.colorDepth}-bit`,
         cookies: navigator.cookieEnabled ? "Yes" : "No",
         online: navigator.onLine ? "Yes" : "No",
-        touch: String(navigator.maxTouchPoints ?? 0)
+        touch: String(navigator.maxTouchPoints ?? 0),
+        cpu: Number.isFinite(navigator.hardwareConcurrency) && navigator.hardwareConcurrency > 0
+          ? `${navigator.hardwareConcurrency} logical threads reported`
+          : "Not exposed by browser",
+        memory: Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory > 0
+          ? `About ${navigator.deviceMemory} GB (coarse estimate)`
+          : "Not exposed by browser",
+        connection: navigator.connection?.effectiveType
+          ? `${navigator.connection.effectiveType} (coarse estimate)`
+          : "Not exposed by browser",
+        "pixel-ratio": Number.isFinite(devicePixelRatio) && devicePixelRatio > 0
+          ? `${devicePixelRatio} device pixels per CSS pixel`
+          : "Not exposed by browser"
       };
 
       document.querySelectorAll("[data-value]").forEach((item) => {

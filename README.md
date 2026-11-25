@@ -1,7 +1,9 @@
 # Cyber-Security-Awareness
 
 A static phishing-awareness demo. The dramatic “YOU'VE BEEN HACKED!” headline is
-simulated; browser details are displayed locally and are not collected or sent.
+simulated; browser details and coarse hardware estimates are displayed locally
+and are not collected or sent. The page also explains data that ordinary
+websites cannot freely access, such as your phone number or installed apps.
 
 ## Publish with GitHub Pages
 
