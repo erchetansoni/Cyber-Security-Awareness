@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101114">
+  <meta name="description" content="An interactive phishing-awareness demonstration showing what a website can learn from your browser—without collecting or sending your data.">
+  <title>Phishing Awareness — A Safe Browser Demo</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101114;
+      --panel: #191b20;
+      --panel-soft: #202228;
+      --text: #f5f4f1;
+      --muted: #b6b5b2;
+      --red: #ff514d;
+      --amber: #ffc96b;
+      --green: #83e3a1;
+      --line: #383a42;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% -18%, rgba(255, 81, 77, .16), transparent 46%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: #ff9a91; }
+
+    .wrap {
+      width: min(100% - 2rem, 940px);
+      margin-inline: auto;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: 1.2rem 0;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: .6rem;
+      height: .6rem;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(131, 227, 161, .6);
+    }
+
+    .hero {
+      padding: clamp(2.5rem, 9vw, 6.5rem) 0 3rem;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: .3rem .75rem;
+      border: 1px solid rgba(255, 81, 77, .48);
+      border-radius: 999px;
+      background: rgba(255, 81, 77, .1);
+      color: #ffb1ab;
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--red);
+      font-size: clamp(2.5rem, 9vw, 6.2rem);
+      font-weight: 950;
+      letter-spacing: -.065em;
+      line-height: .98;
+      text-shadow: 0 0 36px rgba(255, 81, 77, .18);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 1.5rem auto 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+    }
+
+    .truth {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: start;
+      gap: .85rem;
+      margin: 0 auto 3rem;
+      padding: 1.2rem 1.3rem;
+      border: 1px solid rgba(131, 227, 161, .38);
+      border-radius: 14px;
+      background: rgba(131, 227, 161, .07);
+    }
+
+    .truth-icon { color: var(--green); font-size: 1.25rem; }
+    .truth strong { color: var(--green); }
+    .truth p { margin: .15rem 0 0; color: var(--muted); }
+
+    section { padding: 1.5rem 0 3.5rem; }
+
+    .section-heading {
+      margin-bottom: 1.25rem;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      letter-spacing: -.04em;
+      line-height: 1.15;
+    }
+
+    .section-heading p {
+      max-width: 680px;
+      margin: .65rem 0 0;
+      color: var(--muted);
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 255px), 1fr));
+      gap: .8rem;
+    }
+
+    .data-card {
+      min-width: 0;
+      padding: 1rem 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+    }
+
+    .data-card dt {
+      margin-bottom: .35rem;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 750;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .data-card dd {
+      overflow-wrap: anywhere;
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .privacy-note {
+      margin: 1rem 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .privacy-note strong { color: var(--green); }
+
+    .exposure-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+      gap: .85rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .exposure-list li {
+      padding: 1.15rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+    }
+
+    .exposure-list strong { display: block; margin-bottom: .35rem; }
+    .exposure-list span { color: var(--muted); }
+    .permission { color: var(--amber) !important; }
+
+    .lesson {
+      padding: clamp(1.3rem, 5vw, 2.2rem);
+      border: 1px solid rgba(255, 201, 107, .38);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255, 201, 107, .09), rgba(255, 201, 107, .025));
+    }
+
+    .lesson h2 { color: var(--amber); }
+    .lesson ul { margin-bottom: 0; padding-left: 1.25rem; }
+    .lesson li + li { margin-top: .45rem; }
+
+    footer {
+      padding: 1.5rem 0 2.5rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    footer p { margin: .3rem 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <div class="topline"><span class="status-dot" aria-hidden="true"></span> Safe simulation · no tracking</div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero" aria-labelledby="headline">
+        <span class="eyebrow">Phishing awareness demonstration</span>
+        <h1 id="headline">YOU'VE BEEN<br>HACKED!</h1>
+        <p>That’s what a convincing scare message wants you to believe. Take a breath—this page is a safe demonstration, not an attack.</p>
+      </section>
+
+      <aside class="truth" aria-label="Important privacy notice">
+        <span class="truth-icon" aria-hidden="true">✓</span>
+        <div>
+          <strong>Your information stays on this device.</strong>
+          <p>This page reads a few ordinary browser settings to demonstrate what a site may see. It does not save, transmit, or share them. No permissions are requested.</p>
+        </div>
+      </aside>
+
+      <section aria-labelledby="browser-heading">
+        <div class="section-heading">
+          <h2 id="browser-heading">What this browser reveals</h2>
+          <p>These values are filled in on your device. They can help explain how basic browser details may contribute to a recognizable profile.</p>
+        </div>
+        <dl class="data-grid" id="browser-data" aria-live="polite">
+          <div class="data-card"><dt>Browser</dt><dd data-value="browser">Reading locally…</dd></div>
+          <div class="data-card"><dt>Operating system hint</dt><dd data-value="platform">Reading locally…</dd></div>
+          <div class="data-card"><dt>Language preference</dt><dd data-value="language">Reading locally…</dd></div>
+          <div class="data-card"><dt>Time zone</dt><dd data-value="timezone">Reading locally…</dd></div>
+          <div class="data-card"><dt>Screen resolution</dt><dd data-value="screen">Reading locally…</dd></div>
+          <div class="data-card"><dt>Page viewport</dt><dd data-value="viewport">Reading locally…</dd></div>
+          <div class="data-card"><dt>Color depth</dt><dd data-value="color">Reading locally…</dd></div>
+          <div class="data-card"><dt>Cookies enabled</dt><dd data-value="cookies">Reading locally…</dd></div>
+          <div class="data-card"><dt>Browser reports online</dt><dd data-value="online">Reading locally…</dd></div>
+          <div class="data-card"><dt>Touch points reported</dt><dd data-value="touch">Reading locally…</dd></div>
+        </dl>
+        <p class="privacy-note"><strong>Privacy check:</strong> These details are not sent anywhere by this demo. A real website can receive your IP address at its server when you connect; this page does not display or look up your IP address.</p>
+      </section>
+
+      <section aria-labelledby="more-heading">
+        <div class="section-heading">
+          <h2 id="more-heading">What a website might learn</h2>
+          <p>Not everything is secretly available to a web page. Some information is shared as part of normal browsing; sensitive features require permission.</p>
+        </div>
+        <ul class="exposure-list">
+          <li><strong>Connection details</strong><span>Your IP address is visible to the website’s server and may indicate an approximate region or internet provider.</span></li>
+          <li><strong>Browser and device hints</strong><span>Browser settings and device characteristics can be combined to distinguish visits. Limiting tracking and using privacy protections can help.</span></li>
+          <li><strong>Location</strong><span class="permission">Precise location requires your permission in the browser. Don’t approve it for a site without a clear reason.</span></li>
+          <li><strong>Camera and microphone</strong><span class="permission">A site must request permission to use them. A suspicious page has no good reason to ask unexpectedly.</span></li>
+          <li><strong>Information you enter</strong><span>Names, passwords, payment details, and one-time codes can be exposed if you type them into a fake form.</span></li>
+          <li><strong>Activity on the page</strong><span>A site can observe interactions on its own pages. Be cautious with unexpected links, downloads, and urgent requests.</span></li>
+        </ul>
+      </section>
+
+      <section class="lesson" aria-labelledby="lesson-heading">
+        <h2 id="lesson-heading">Pause before you trust a message</h2>
+        <ul>
+          <li>Check the sender and the real destination of links—watch for misspellings and look-alike domains.</li>
+          <li>Don’t share passwords, payment details, or verification codes through a link in an unexpected message.</li>
+          <li>Verify urgent requests using a known, official website or phone number—not the contact details in the message.</li>
+          <li>If you entered a password, go directly to the real service, change it, and turn on multi-factor authentication.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Made for security awareness. This static page uses no analytics, cookies, external scripts, or data-collection services.</p>
+      <p>Browser details are approximate signals, not proof that a device has been compromised.</p>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const ua = navigator.userAgent;
+      let browser = "Other browser";
+      if (/Edg\//.test(ua)) browser = "Microsoft Edge";
+      else if (/OPR\//.test(ua)) browser = "Opera";
+      else if (/Firefox\//.test(ua)) browser = "Mozilla Firefox";
+      else if (/Chrome\//.test(ua) && !/Chromium/.test(ua)) browser = "Google Chrome";
+      else if (/Safari\//.test(ua) && !/Chrome|Chromium/.test(ua)) browser = "Apple Safari";
+
+      const values = {
+        browser,
+        platform: navigator.platform || "Not provided by browser",
+        language: navigator.language || "Not provided by browser",
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Not provided by browser",
+        screen: `${screen.width} × ${screen.height} pixels`,
+        viewport: `${innerWidth} × ${innerHeight} pixels`,
+        color: `${screen.colorDepth}-bit`,
+        cookies: navigator.cookieEnabled ? "Yes" : "No",
+        online: navigator.onLine ? "Yes" : "No",
+        touch: String(navigator.maxTouchPoints ?? 0)
+      };
+
+      document.querySelectorAll("[data-value]").forEach((item) => {
+        const key = item.getAttribute("data-value");
+        item.textContent = values[key];
+      });
+
+      addEventListener("resize", () => {
+        document.querySelector('[data-value="viewport"]').textContent = `${innerWidth} × ${innerHeight} pixels`;
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
