@@ -3,7 +3,9 @@
 A static phishing-awareness demo. The dramatic “YOU'VE BEEN HACKED!” headline is
 simulated; browser details and coarse hardware estimates are displayed locally
 and are not collected or sent. The page also explains data that ordinary
-websites cannot freely access, such as your phone number or installed apps.
+websites cannot freely access, such as your phone number or installed apps. An
+interactive, fictional offer demonstrates permission pressure; accepting or
+declining only reveals the lesson and never requests real permissions.
 
 ## Publish with GitHub Pages
 

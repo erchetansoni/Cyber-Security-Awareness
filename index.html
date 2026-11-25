@@ -113,6 +113,49 @@
     .truth strong { color: var(--green); }
     .truth p { margin: .15rem 0 0; color: var(--muted); }
 
+    .offer-panel {
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: clamp(1.3rem, 5vw, 2.2rem);
+      border: 1px solid rgba(255, 201, 107, .38);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255, 201, 107, .09), rgba(255, 201, 107, .025));
+    }
+
+    .offer-panel h1 { font-size: clamp(2.2rem, 8vw, 4.5rem); }
+    .offer-panel h2 { margin-top: 1.8rem; color: var(--amber); font-size: 1.2rem; }
+    .offer-panel p, .offer-panel li { color: var(--muted); }
+    .offer-panel ul { padding-left: 1.25rem; }
+    .offer-panel li + li { margin-top: .35rem; }
+
+    .simulation-notice {
+      margin-top: 1.5rem;
+      padding: .9rem 1rem;
+      border: 1px solid rgba(131, 227, 161, .38);
+      border-radius: 10px;
+      background: rgba(131, 227, 161, .07);
+      color: var(--green) !important;
+      font-weight: 700;
+    }
+
+    .offer-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.2rem; }
+
+    .offer-actions button {
+      min-height: 2.8rem;
+      padding: .65rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      color: var(--text);
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .offer-actions button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+    .offer-actions button:first-child { border-color: var(--red); background: #522421; }
+    [hidden] { display: none !important; }
+
     section { padding: 1.5rem 0 3.5rem; }
 
     .section-heading {
@@ -221,18 +264,37 @@
   </header>
 
   <main>
-    <div class="wrap">
+    <section class="wrap" id="offer-screen" aria-labelledby="offer-heading" hidden>
+      <div class="offer-panel">
+        <span class="eyebrow">Interactive awareness simulation</span>
+        <h1 id="offer-heading">CLAIM YOUR<br>FREE REWARD</h1>
+        <p>A page may use an exciting offer and a sense of urgency to pressure you into sharing information or granting access.</p>
+        <h2>This offer claims it needs access to:</h2>
+        <ul>
+          <li>Your contacts</li>
+          <li>Your photos and files</li>
+          <li>Your call history</li>
+        </ul>
+        <p class="simulation-notice">Safe demo: these are pretend requests. No browser permission prompt will appear, and this page will not access or collect anything.</p>
+        <div class="offer-actions" aria-label="Choose how to respond">
+          <button type="button" data-choice="accept">Accept offer (simulation)</button>
+          <button type="button" data-choice="decline">Decline offer</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap" id="awareness-content">
       <section class="hero" aria-labelledby="headline">
         <span class="eyebrow">Phishing awareness demonstration</span>
-        <h1 id="headline">YOU'VE BEEN<br>HACKED!</h1>
+        <h1 id="headline" tabindex="-1">YOU'VE BEEN<br>HACKED!</h1>
         <p>That’s what a convincing scare message wants you to believe. Take a breath—this page is a safe demonstration, not an attack.</p>
       </section>
 
       <aside class="truth" aria-label="Important privacy notice">
         <span class="truth-icon" aria-hidden="true">✓</span>
         <div>
-          <strong>Your information stays on this device.</strong>
-          <p>This page reads a few ordinary browser settings to demonstrate what a site may see. It does not save, transmit, or share them. No permissions are requested.</p>
+          <strong>You were not hacked. Nothing was accessed.</strong>
+          <p id="reveal-message">This page reads a few ordinary browser settings to demonstrate what a site may see. It does not save, transmit, or share them. The offer and access requests were simulated; no permissions were requested.</p>
         </div>
       </aside>
 
@@ -267,6 +329,7 @@
         </div>
         <ul class="exposure-list">
           <li><strong>Phone number and installed apps</strong><span>A website cannot silently read your phone number or get a list of apps installed on your device.</span></li>
+          <li><strong>Contacts, files, and call history</strong><span>A normal website cannot silently read your contacts, browse all your files, or inspect call history. Some browsers let you choose specific contacts or files to share; that is not full-device access.</span></li>
           <li><strong>Device name and serial number</strong><span>These identifiers are not generally exposed to ordinary websites. A browser may share limited device hints, but that is not the same as a unique device inventory.</span></li>
           <li><strong>Exact model, CPU, and RAM</strong><span>Browsers may reveal broad platform hints or coarse estimates, such as logical CPU threads and approximate memory. They do not provide a reliable exact hardware report.</span></li>
           <li><strong>Location, camera, and microphone</strong><span class="permission">These features require browser permission. A page should explain why it needs access, and you can deny or revoke it.</span></li>
@@ -309,6 +372,28 @@
 
   <script>
     (() => {
+      const offerScreen = document.getElementById("offer-screen");
+      const awarenessContent = document.getElementById("awareness-content");
+      const revealMessage = document.getElementById("reveal-message");
+      const headline = document.getElementById("headline");
+
+      if (offerScreen && awarenessContent) {
+        offerScreen.hidden = false;
+        awarenessContent.hidden = true;
+
+        offerScreen.querySelectorAll("[data-choice]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const accepted = button.getAttribute("data-choice") === "accept";
+            revealMessage.textContent = accepted
+              ? "You chose to accept, but nothing was granted or accessed. The offer and access requests were simulated. No permissions were requested, and this page does not save or send browser details."
+              : "You chose to decline. No access was requested either way. The offer and access requests were simulated, and this page does not save or send browser details.";
+            offerScreen.hidden = true;
+            awarenessContent.hidden = false;
+            headline.focus();
+          });
+        });
+      }
+
       const ua = navigator.userAgent;
       let browser = "Other browser";
       if (/Edg\//.test(ua)) browser = "Microsoft Edge";
